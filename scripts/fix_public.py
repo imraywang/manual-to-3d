@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_public import strip  # noqa: E402
-from pipeline import SYSTEM, ask_claude, parse_json  # noqa: E402,F401
+from pipeline import SYSTEM, ask_model, parse_json  # noqa: E402,F401
 from translate import set_path, text_fields  # noqa: E402
 from validate import validate  # noqa: E402
 
@@ -48,7 +48,7 @@ def fix(slug, rounds=2):
         if not best[1]:
             break
         print(f"{slug}: 第 {r + 1} 轮修复，{len(best[1])} 个 error")
-        cand = parse_json(ask_claude([{"type": "text", "text": PROMPT.format(
+        cand = parse_json(ask_model([{"type": "text", "text": PROMPT.format(
             schema=schema, errors="\n".join(best[1]), scene=json.dumps(best[0], ensure_ascii=False, indent=1))}], "opus"))
         cand = strip(cand)
         if frozen(cand) != lock:

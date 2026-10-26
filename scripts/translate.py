@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from pipeline import ask_claude, parse_json  # noqa: E402
+from pipeline import ask_model, parse_json  # noqa: E402
 
 from m3d_paths import SITE as ROOT, SCHEMA, EXAMPLE  # noqa: E402
 
@@ -50,7 +50,7 @@ def translate(slug):
     scene = json.loads((ROOT / "scenes" / f"{slug}.json").read_text())
     fields = text_fields(scene)
     payload = {"/".join(map(str, p)): v for p, v in fields}
-    result = parse_json(ask_claude([{"type": "text", "text": PROMPT.format(
+    result = parse_json(ask_model([{"type": "text", "text": PROMPT.format(
         payload=json.dumps(payload, ensure_ascii=False, indent=1))}], "sonnet"))
     missing = [k for k in payload if k not in result]
     if missing:
