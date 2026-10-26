@@ -23,16 +23,32 @@ Each guide has step-by-step animation, a parts list per step, read-aloud narrati
 4. **Validate and repair.** A validator checks part counts against the manual, geometric overlap and floating hardware, and whether each new part is actually visible from that step's camera. Errors go back to Claude, up to 3 rounds; the best round wins.
 5. **Render.** A single-file Three.js player (orthographic, IKEA-manual look) plays the scene.
 
-A run takes about 6–12 minutes. All model calls go through your local `claude` CLI (`claude -p`), so there is no API key to configure.
+A run takes about 6–12 minutes with Claude. By default model calls go through your local `claude` CLI (`claude -p`), so there is no API key to configure; without Claude Code, any OpenAI-compatible vision model works (see below).
 
 ## Install
 
-Requirements: [Claude Code](https://claude.com/claude-code) logged in, Python 3.9+, poppler, and optionally Google Chrome (for thumbnails).
+Requirements: Python 3.9+, poppler, optionally Google Chrome (for thumbnails), and a model: [Claude Code](https://claude.com/claude-code) logged in, or an OpenAI-compatible API key (below).
 
 ```bash
 brew install poppler            # or: apt install poppler-utils
 git clone https://github.com/imraywang/manual-to-3d ~/.claude/skills/manual-to-3d
 ```
+
+**WorkBuddy** (Tencent) reads the same skill format:
+
+```bash
+git clone https://github.com/imraywang/manual-to-3d ~/.workbuddy/skills/manual-to-3d
+```
+
+### Without Claude Code
+
+Put an OpenAI-compatible endpoint with a vision model in `~/.config/manual-to-3d/config.json` (or the `MANUAL_TO_3D_*` environment variables). It defaults to Volcengine Ark (Doubao):
+
+```json
+{"backend": "ark", "api_key": "<your Ark API key>", "model": "doubao-seed-2-1-pro-260915"}
+```
+
+For other providers set `"backend": "openai"`, `"base_url"` and `"model"` (e.g. Qwen-VL, Kimi, GLM-V, OpenRouter). `"model_fast"` is used for translation, `"max_tokens"` defaults to 32000. In our LACK coffee-table test, Doubao 2.1 Pro finished with 0 errors but took about 44 minutes (Claude: 7) and misread one part, so check the result against the manual.
 
 ## Use
 

@@ -7,7 +7,7 @@ description: Turn a flat-pack furniture assembly manual (IKEA and similar) into 
 
 One sentence in, a playable 3D assembly guide out. Code is in `scripts/`; the player (`guide.html`) and gallery (`index.html`) are in `assets/` and get copied into the workspace on first run. The workspace is `~/manual-to-3d` unless `MANUAL_TO_3D_HOME` is set.
 
-Requirements: the `claude` CLI logged in (all model calls go through `claude -p`, no API key), Python 3.9+, poppler (`pdftoppm`, `pdfinfo`), and optionally Google Chrome for thumbnails.
+Requirements: Python 3.9+, poppler (`pdftoppm`, `pdfinfo`), optionally Google Chrome for thumbnails, and a model. With the `claude` CLI logged in, calls go through `claude -p` (no API key). Otherwise configure an OpenAI-compatible vision model in `~/.config/manual-to-3d/config.json` (defaults to Volcengine Ark / Doubao; see README). The run log's first line says which model is used. Non-Claude models are slower (Doubao: ~40 min for a small table) and misread parts more often, so the step-3 check matters even more; run make.py in the background.
 
 ## 1. Turn the request into a query
 

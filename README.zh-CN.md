@@ -23,16 +23,32 @@
 4. **校验 + 修复**：核对零件数、几何穿插和悬空五金、每一步新零件在镜头里是否看得见；有 error 交回 Claude 修，最多 3 轮，保留最好的一版。
 5. **播放**：单文件 Three.js 播放器，正交视角、说明书风格。
 
-跑一次约 6–12 分钟。模型调用都走本机的 `claude` 命令行（`claude -p`），不用配 API key。
+用 Claude 跑一次约 6–12 分钟。默认走本机的 `claude` 命令行（`claude -p`），不用配 API key；没有 Claude Code 时可以用任何能看图的 OpenAI 兼容模型（见下）。
 
 ## 安装
 
-需要：已登录的 [Claude Code](https://claude.com/claude-code)、Python 3.9+、poppler，可选 Google Chrome（渲染封面图）。
+需要：Python 3.9+、poppler，可选 Google Chrome（渲染封面图），以及一个模型：已登录的 [Claude Code](https://claude.com/claude-code)，或者 OpenAI 兼容接口的 API key（见下）。
 
 ```bash
 brew install poppler
 git clone https://github.com/imraywang/manual-to-3d ~/.claude/skills/manual-to-3d
 ```
+
+**WorkBuddy**（腾讯）用同样的 skill 格式：
+
+```bash
+git clone https://github.com/imraywang/manual-to-3d ~/.workbuddy/skills/manual-to-3d
+```
+
+### 不用 Claude Code
+
+在 `~/.config/manual-to-3d/config.json`（或 `MANUAL_TO_3D_*` 环境变量）里配一个能看图的 OpenAI 兼容接口，默认是火山方舟（豆包）：
+
+```json
+{"backend": "ark", "api_key": "<你的方舟 API key>", "model": "doubao-seed-2-1-pro-260915"}
+```
+
+其他平台写 `"backend": "openai"`、`"base_url"` 和 `"model"`（通义 VL、Kimi、GLM-V、OpenRouter 等）。`"model_fast"` 用于翻译，`"max_tokens"` 默认 32000。实测 LACK 茶几：豆包 2.1 Pro 0 error 跑通，但用了约 44 分钟（Claude 7 分钟），还读错了一个零件，结果要对照说明书看。
 
 ## 使用
 
