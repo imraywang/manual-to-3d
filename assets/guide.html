@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assembly guide</title>
+<style>
+  :root {
+    --bg: #F3F1EC; --card: #FFFFFF; --ink: #161616; --muted: #6E6B65; --faint: #A19D95;
+    --line: #E8E5DD; --soft: #F6F4EF; --accent: #F5CF2F; --accent-ink: #1A1600;
+    --radius: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+
+  .bar { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+  .logo { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); box-shadow: inset 0 0 0 6px var(--ink); position: relative; }
+  .logo::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--accent); }
+  .brand b { display: block; font-size: 15px; letter-spacing: .02em; }
+  .brand small { display: block; font-size: 12px; color: var(--muted); }
+  .tabs { display: flex; gap: 4px; }
+  .tabs button { padding: 6px 12px; border-radius: 8px; font-size: 14px; color: var(--muted); position: relative; }
+  .tabs button.on { color: var(--ink); font-weight: 600; }
+  .tabs button.on::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 0; height: 2px; background: var(--ink); border-radius: 2px; }
+  .tabs .sub { color: var(--faint); font-weight: 400; }
+  .right { display: flex; align-items: center; gap: 8px; min-width: 180px; justify-content: flex-end; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; }
+  .icon-btn:hover { background: #EAE7E0; }
+  #langBtn { width: auto; padding: 0 10px; font-size: 13px; font-weight: 600; }
+  .pill { height: 36px; padding: 0 14px; border-radius: 999px; background: var(--ink); color: #fff; display: flex; align-items: center; gap: 7px; font-size: 14px; }
+  .pill.on { background: var(--accent); color: var(--accent-ink); }
+  .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #fff; opacity: .5; }
+  .pill.on .dot { background: #C0261C; opacity: 1; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+
+  main { display: grid; grid-template-columns: 1fr 380px; gap: 14px; padding: 0 20px 20px; height: calc(100% - 60px); }
+  .card { background: var(--card); border-radius: var(--radius); box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 8px 30px rgba(40,30,0,.05); }
+  .stage { position: relative; overflow: hidden; min-height: 360px; }
+  #c { width: 100%; height: 100%; display: block; touch-action: none; }
+
+  .manual { position: absolute; inset: 0; background: #fff; display: none; overflow: hidden; }
+  .manual.on { display: block; }
+  .mwrap { position: absolute; left: 0; top: 0; will-change: transform; }
+  .mwrap img { display: block; }
+  .mwrap .hl { position: absolute; border: 3px solid var(--accent); border-radius: 10px; box-shadow: 0 0 0 3px rgba(22,22,22,.85); animation: hl 1.4s ease-in-out infinite; }
+  @keyframes hl { 50% { box-shadow: 0 0 0 8px rgba(245,207,47,.35); } }
+  .mlabel { position: absolute; right: 18px; bottom: 16px; font-size: 12px; color: var(--muted); background: var(--soft); border-radius: 999px; padding: 6px 12px; }
+  .stepnum { position: absolute; left: 24px; top: 14px; font-size: 64px; font-weight: 800; line-height: 1; letter-spacing: -.04em; pointer-events: none; }
+  .badge { position: absolute; left: 24px; top: 92px; display: flex; gap: 10px; padding: 8px 12px; border: 1.5px solid var(--ink); border-radius: 10px; background: #fff; pointer-events: none; }
+  .badge:empty { display: none; }
+  .badge div { display: flex; flex-direction: column; align-items: center; font-size: 12px; font-weight: 700; gap: 2px; }
+  .badge svg { width: 26px; height: 18px; }
+
+  .caption { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); max-width: min(560px, calc(100% - 200px)); background: var(--ink); color: #fff; border-radius: 12px; padding: 9px 16px 9px 12px; display: flex; gap: 10px; align-items: flex-start; font-size: 15px; font-weight: 600; line-height: 1.45; pointer-events: none; }
+  .caption .bars { display: flex; gap: 2px; align-items: flex-end; height: 14px; margin-top: 3px; flex: none; }
+  .caption .bars i { width: 3px; background: var(--accent); border-radius: 2px; height: 5px; }
+  .caption.live .bars i { animation: eq .8s infinite ease-in-out; }
+  .caption.live .bars i:nth-child(2) { animation-delay: .15s; } .caption.live .bars i:nth-child(3) { animation-delay: .3s; }
+  @keyframes eq { 50% { height: 14px; } }
+  .caption .rest { color: rgba(255,255,255,.42); }
+
+  .leader { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .callout { position: absolute; width: 112px; pointer-events: none; opacity: 0; transition: opacity .25s; text-align: center; }
+  .callout.show { opacity: 1; }
+  .callout .lens { width: 112px; height: 112px; border-radius: 50%; background: #FBF4D9; border: 2px solid var(--ink); display: grid; place-items: center; overflow: hidden; }
+  .callout .lens svg { width: 76px; height: 76px; }
+  .callout .ctext { margin-top: 6px; font-size: 12px; font-weight: 600; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 3px 6px; display: inline-block; white-space: nowrap; }
+  .spin { transform-origin: 50% 50%; animation: spin 1.6s cubic-bezier(.5,0,.3,1) infinite; }
+  @keyframes spin { 0% { transform: rotate(0); } 60%, 100% { transform: rotate(180deg); } }
+  .tap { transform-origin: 70% 80%; animation: tap .7s infinite; }
+  @keyframes tap { 0%, 100% { transform: rotate(-24deg); } 45% { transform: rotate(6deg); } }
+
+  .controls { position: absolute; left: 18px; bottom: 16px; display: flex; gap: 6px; }
+  .controls button { height: 34px; min-width: 34px; padding: 0 10px; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 13px; display: grid; place-items: center; }
+  .controls button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .heard { position: absolute; right: 18px; bottom: 16px; font-size: 12px; color: var(--muted); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; opacity: 0; transition: opacity .3s; }
+  .heard.show { opacity: 1; }
+  .toast { position: absolute; left: 50%; bottom: 64px; transform: translateX(-50%); background: var(--ink); color: #fff; font-size: 13px; padding: 8px 14px; border-radius: 10px; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  .panel { display: flex; flex-direction: column; overflow: hidden; }
+  .panel .scroll { flex: 1; overflow-y: auto; padding: 22px 22px 8px; }
+  .voicehint { display: flex; gap: 10px; align-items: center; background: var(--soft); border-radius: 14px; padding: 12px; margin-bottom: 20px; font-size: 13px; }
+  .voicehint .mic { width: 30px; height: 30px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+  .voicehint b { display: block; font-size: 14px; }
+  .voicehint span { color: var(--muted); }
+  .voicehint .go { margin-left: auto; background: var(--ink); color: #fff; border-radius: 999px; padding: 6px 12px; font-size: 13px; flex: none; }
+  .voicehint .x { color: var(--faint); padding: 4px; flex: none; }
+  .meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+  .meta .time { background: var(--soft); border-radius: 999px; padding: 3px 10px; }
+  h1 { font-size: 24px; line-height: 1.25; margin: 8px 0 6px; letter-spacing: -.01em; }
+  .desc { margin: 0 0 18px; color: #3B3934; font-size: 14px; line-height: 1.6; }
+  h3 { font-size: 13px; margin: 0 0 8px; color: var(--muted); font-weight: 600; }
+  .needs { list-style: none; margin: 0 0 14px; padding: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .needs li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; font-size: 14px; }
+  .needs li + li { border-top: 1px solid var(--line); }
+  .needs svg { width: 34px; height: 22px; flex: none; }
+  .needs .nm { flex: 1; display: flex; flex-direction: column; }
+  .needs .nm small { color: var(--faint); font-size: 12px; }
+  .needs .lbl { display: inline-grid; place-items: center; width: 20px; height: 20px; border: 1.5px solid var(--ink); border-radius: 50%; font-size: 11px; font-weight: 700; margin-right: 6px; }
+  .needs b { font-size: 14px; }
+  .needs input { width: 18px; height: 18px; accent-color: var(--ink); }
+  .tip { background: var(--soft); border-radius: 12px; padding: 10px 12px; font-size: 13px; line-height: 1.55; color: #3B3934; margin-bottom: 12px; }
+  .tip::before { content: "✦ "; color: #B8920A; }
+  .panel footer { padding: 12px 22px 16px; border-top: 1px solid var(--line); }
+  .actions { display: flex; gap: 8px; }
+  .back { width: 48px; height: 48px; border-radius: 50%; background: var(--soft); display: grid; place-items: center; flex: none; }
+  .back:disabled { opacity: .35; cursor: default; }
+  .primary { flex: 1; height: 48px; border-radius: 999px; background: var(--ink); color: #fff; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 8px; font-weight: 600; font-size: 15px; }
+  .primary .chk { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; }
+  .primary .arr { margin-left: auto; margin-right: 10px; }
+  .hint { font-size: 12px; color: var(--faint); margin-top: 10px; display: flex; justify-content: space-between; }
+  kbd { font: inherit; font-size: 11px; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--soft); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0 18px; }
+  .stats div { background: var(--soft); border-radius: 12px; padding: 10px; }
+  .stats small { display: block; font-size: 12px; color: var(--muted); }
+  .stats b { font-size: 20px; }
+  .checks { margin: 0 0 14px; padding-left: 18px; font-size: 14px; line-height: 1.8; }
+  .src { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .src a { display: block; width: 92px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; color: var(--muted); text-decoration: none; font-size: 12px; text-align: center; background: #fff; }
+  .src img { display: block; width: 100%; height: 118px; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); }
+  .src span { display: block; padding: 3px 0; }
+  .disclaimer { font-size: 11px; color: var(--faint); margin-top: 8px; line-height: 1.5; }
+
+  body.thumb .bar, body.thumb .panel, body.thumb .stage > :not(canvas) { display: none !important; }
+  body.thumb main { grid-template-columns: 1fr; padding: 0; height: 100vh; }
+  body.thumb .stage { border-radius: 0; box-shadow: none; height: 100vh; }
+  @media (max-width: 860px) {
+    html, body { height: auto; }
+    .bar { padding: 0 16px; }
+    .brand, .right { min-width: 0; }
+    .tabs { display: none; }
+    /* 顶栏在 375px 宽也排成一行：按钮不折行，产品名放不下就省略 */
+    .brand { flex: 1; min-width: 0; overflow: hidden; }
+    .brand > div { min-width: 0; }
+    .brand b, .brand small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .right { gap: 4px; flex: none; }
+    #langBtn, .pill { white-space: nowrap; }
+    .pill { padding: 0 12px; font-size: 13px; }
+    main { grid-template-columns: 1fr; height: auto; padding: 0 16px 16px; }
+    /* 手机上字幕不再浮在 3D 画面上：画面占上半，字幕和播放控制排在它下面 */
+    .stage { height: auto; min-height: 0; display: flex; flex-direction: column; }
+    #c, .manual { height: 50vh; min-height: 300px; flex: none; }
+    .manual { bottom: auto; }
+    .stepnum { font-size: 44px; left: 16px; }
+    .badge { top: 66px; left: 16px; }
+    .caption { position: static; transform: none; order: 1; max-width: none; width: auto; margin: 0 12px; font-size: 15px; }
+    .controls { position: static; order: 2; padding: 10px 12px 12px; }
+  }
+  /* 封面图在任何窗口宽度下都铺满画面（窄窗口不走手机的上下排布） */
+  body.thumb #c { height: 100vh; min-height: 0; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="index.html" data-i18n-title="allCases" style="color:inherit;text-decoration:none"><span class="logo"></span><div><b>KALLAX</b><small>置物架 2×2</small></div></a>
+  <nav class="tabs">
+    <button data-tab="parts" data-i18n="parts"></button>
+    <button data-tab="build" class="on"><span data-i18n="build"></span> <span class="sub" id="tabStep">1/9</span></button>
+    <button data-tab="done" data-i18n="done"></button>
+  </nav>
+  <div class="right">
+    <button class="icon-btn" id="langBtn" title="Language"></button>
+    <button class="icon-btn" id="speakBtn" data-i18n-title="speak">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" stroke-linecap="round"/></svg>
+    </button>
+    <button class="pill" id="voiceBtn"><span class="dot"></span><span id="voiceLabel"></span></button>
+  </div>
+</header>
+
+<main>
+  <section class="stage card" id="stage">
+    <canvas id="c"></canvas>
+    <div class="manual" id="manual"><div class="mwrap" id="mwrap"><img id="mimg" alt=""><div id="mhl"></div></div><div class="mlabel" id="mlabel"></div></div>
+    <div class="stepnum" id="stepNum">1</div>
+    <div class="badge" id="badge"></div>
+    <div class="caption" id="caption"><span class="bars"><i></i><i></i><i></i></span><span id="capText"></span></div>
+    <svg class="leader" id="leader"></svg>
+    <div class="callout" id="callout"><div class="lens" id="lens"></div><div class="ctext" id="ctext"></div></div>
+    <div class="controls">
+      <button id="replayBtn" data-i18n-title="replay"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg></button>
+      <button id="pauseBtn" data-i18n-title="pause"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/></svg></button>
+      <button id="slowBtn" data-i18n="slow"></button>
+    </div>
+    <div class="heard" id="heard"></div>
+    <div class="toast" id="toast"></div>
+  </section>
+  <aside class="panel card">
+    <div class="scroll" id="panelBody"></div>
+    <footer id="panelFoot"></footer>
+  </aside>
+</main>
+
+<!-- 场景数据在 scenes/*.json，格式见 references/scene-schema.md；用 ?scene=名字 切换 -->
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const $ = id => document.getElementById(id);
+const params = new URLSearchParams(location.search);
+const store = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+const LANG = (params.get('lang') || store.get('lang') || 'en') === 'zh' ? 'zh' : 'en';
+const I18N = {
+  en: {
+    allCases: 'All guides', parts: 'Parts', build: 'Build', done: 'Done', speak: 'Read this step aloud',
+    voice: 'Voice mode', listening: 'Listening', readOnly: 'Read-aloud only', replay: 'Replay (R)', pause: 'Pause (Space)', slow: 'Slow',
+    docTitle: '{name} assembly guide', manualLabel: 'Original manual · p. {p}', doneSay: 'All done! Remember to anchor it to the wall.',
+    voiceHintTitle: 'Hands full? Turn on voice', voiceHintBody: 'Each step is read aloud. Say “next” to continue.', turnOn: 'Turn on',
+    stepOf: 'Step {n} of {N}', timeLeft: '⏱ about {m} min left', need: 'You need', compare: 'Compare with the manual', page: 'p. {p}',
+    prev: 'Previous step', finish: 'Finish', nextStep: 'Done, next step', stuck: 'Stuck? Say “repeat”', keysMove: 'move', keysReplay: 'replay',
+    partsTitle: 'Check the parts first', partsDesc: 'Tick each item off. Finding a missing screw at step 1 beats finding it at step 8.',
+    partsCount: '{n} pieces', start: 'All here, start building',
+    disclaimer: 'Demo data, not an official manual. Always follow the paper manual in the box.',
+    doneTitle: 'You built {name}', doneDesc: 'Every step done. Nice work.', time: 'Time', minutes: '{m} min', steps: 'Steps', partsLabel: 'Parts',
+    before: 'Before you finish', lastStep: 'Back to the last step', restart: 'Watch it again',
+    noSR: 'No speech recognition in this browser. Use ← → to move.', micDenied: 'Microphone blocked. Narration still works; use the buttons or arrow keys.',
+    heard: 'Heard: “{c}”', cmdNext: 'next', cmdBack: 'back', cmdRepeat: 'repeat', cmdPause: 'pause', other: '中文',
+  },
+  zh: {
+    allCases: '全部案例', parts: '零件', build: '组装', done: '完成', speak: '朗读这一步',
+    voice: '语音模式', listening: '正在听', readOnly: '只朗读', replay: '重播 (R)', pause: '暂停 (空格)', slow: '慢速',
+    docTitle: '{name} 组装指导', manualLabel: '说明书原图 · 第 {p} 页', doneSay: '装好了！记得把柜子固定到墙上。',
+    voiceHintTitle: '双手没空？打开语音', voiceHintBody: '每一步会读出来，说“下一步”继续。', turnOn: '打开',
+    stepOf: '第 {n} 步 / 共 {N} 步', timeLeft: '⏱ 剩余约 {m} 分钟', need: '需要', compare: '对照说明书', page: '第 {p} 页',
+    prev: '上一步', finish: '完成', nextStep: '完成，下一步', stuck: '卡住了？说“重播”', keysMove: '切换', keysReplay: '重播',
+    partsTitle: '开箱先点一遍零件', partsDesc: '按清单逐项打勾。少一颗螺丝，在第一步发现比在第八步发现省一晚上。',
+    partsCount: '共 {n} 件', start: '零件齐了，开始组装',
+    disclaimer: '演示数据，不是官方说明书；实际组装以包装内的说明书为准。',
+    doneTitle: '你装好了 {name}', doneDesc: '每一步都完成了，干得漂亮。', time: '用时', minutes: '{m} 分钟', steps: '步骤', partsLabel: '零件',
+    before: '收尾前', lastStep: '回到最后一步', restart: '从头再看一遍',
+    noSR: '这个浏览器不支持语音识别，可以用 ← → 键翻页', micDenied: '麦克风没有授权，朗读照常，翻页用按钮或方向键',
+    heard: '听到：“{c}”', cmdNext: '下一步', cmdBack: '上一步', cmdRepeat: '重播', cmdPause: '暂停', other: 'EN',
+  },
+};
+const T = (k, vars = {}) => I18N[LANG][k].replace(/\{(\w+)\}/g, (_, v) => vars[v]);
+document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
+document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T(el.dataset.i18n); });
+document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = T(el.dataset.i18nTitle); });
+$('langBtn').textContent = T('other');
+$('langBtn').onclick = () => { const next = LANG === 'zh' ? 'en' : 'zh'; store.set('lang', next); params.set('lang', next); location.search = params.toString(); };
+
+const sceneName = params.get('scene') || 'kallax-handmade';
+const loadScene = p => fetch(p).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+const S = LANG === 'en'
+  ? await loadScene(`scenes/en/${encodeURIComponent(sceneName)}.json`).catch(() => loadScene(`scenes/${encodeURIComponent(sceneName)}.json`))
+  : await loadScene(`scenes/${encodeURIComponent(sceneName)}.json`);
+for (const st of S.steps) { st.arrows ||= []; st.callouts ||= []; st.tools ||= []; st.minutes ||= 3; }
+S.tools ||= {}; S.afterChecks ||= [];
+const N = S.steps.length;
+document.title = T('docTitle', { name: S.product.name });
+document.querySelector('.brand b').textContent = S.product.name;
+document.querySelector('.brand small').textContent = S.product.sub || '';
+const pageUrl = n => S.manual?.pages?.replace('{nn}', String(n).padStart(2, '0'));
+
+// ---------- icons ----------
+const ICON = {
+  panel: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4" stroke-linejoin="round"><path d="M2 12l15-8 15 8-15 8z" fill="#F8F0D6"/><path d="M2 12v2l15 8 15-8v-2"/></svg>',
+  bolt: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4"><path d="M3 11h20"/><path d="M7 8.5v5M10 8.5v5M13 8.5v5" stroke-width="1"/><circle cx="27" cy="11" r="4" fill="#E4E6E9"/></svg>',
+  dowel: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4"><rect x="3" y="8" width="28" height="6" rx="3" fill="#E7C893"/><path d="M10 8v6M17 8v6M24 8v6" stroke-width=".8"/></svg>',
+  camlock: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4"><circle cx="17" cy="11" r="8" fill="#E4E6E9"/><path d="M12 11h10" stroke-width="2"/></svg>',
+  bracket: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4" stroke-linejoin="round"><path d="M6 4h6v10h16v5H6z" fill="#E4E6E9"/><circle cx="9" cy="8" r="1"/><circle cx="23" cy="16.5" r="1"/></svg>',
+  screwdriver: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4" stroke-linecap="round"><path d="M3 11h14"/><rect x="17" y="7" width="13" height="8" rx="3" fill="#F5CF2F"/></svg>',
+  hammer: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4" stroke-linejoin="round"><path d="M4 13h18" stroke-width="2.4" stroke-linecap="round"/><path d="M22 5h7v14h-7z" fill="#C9CDD2"/></svg>',
+  screw: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4"><path d="M6 6v10" stroke-width="2.4"/><path d="M7 11h22"/><path d="M12 9l2 4M16 9l2 4M20 9l2 4M24 9l2 4" stroke-width=".9"/></svg>',
+  pad: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4"><ellipse cx="17" cy="10" rx="10" ry="4.5" fill="#E9E6DF"/><path d="M7 10v3c0 2.5 4.5 4.5 10 4.5s10-2 10-4.5v-3"/></svg>',
+  allen: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M5 6h6v11h18"/></svg>',
+  drill: '<svg viewBox="0 0 34 22" fill="none" stroke="#161616" stroke-width="1.4" stroke-linejoin="round"><path d="M10 5h14v7H10z" fill="#F5CF2F"/><path d="M14 12l-2 8h5l1-8M24 8.5h7"/></svg>',
+};
+const LENS = {
+  twist: '<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="26" fill="#E4E6E9" stroke="#161616" stroke-width="2.5"/><g class="spin"><rect x="22" y="36.5" width="36" height="7" rx="2" fill="#161616"/></g><path d="M66 30a28 28 0 0 1-6 30" fill="none" stroke="#161616" stroke-width="2.5" stroke-linecap="round"/><path d="M55 57l5 4 2-6" fill="none" stroke="#161616" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  tap: '<svg viewBox="0 0 80 80"><rect x="14" y="56" width="52" height="12" fill="#F8F0D6" stroke="#161616" stroke-width="2"/><rect x="36" y="44" width="8" height="14" rx="3" fill="#E7C893" stroke="#161616" stroke-width="2"/><g class="tap"><path d="M18 26h34" stroke="#161616" stroke-width="5" stroke-linecap="round"/><rect x="50" y="16" width="14" height="22" rx="2" fill="#C9CDD2" stroke="#161616" stroke-width="2"/></g></svg>',
+  screw: '<svg viewBox="0 0 80 80"><rect x="8" y="10" width="14" height="60" fill="#E8E6E0" stroke="#161616" stroke-width="2"/><path d="M22 24h14v38h30v8H22" fill="#E4E6E9" stroke="#161616" stroke-width="2" stroke-linejoin="round"/><g class="spin" style="transform-origin:29px 32px"><circle cx="29" cy="32" r="5" fill="#fff" stroke="#161616" stroke-width="2"/><path d="M26 32h6" stroke="#161616" stroke-width="2"/></g></svg>',
+};
+
+// ---------- derived data: when each instance first appears, counts per step ----------
+const blank = () => Object.fromEntries(S.instances.map(d => [d.id, { vis: false, off: [0, 0, 0], spin: 0 }]));
+const clone = s => JSON.parse(JSON.stringify(s));
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+function applyStep(state, step, t) {
+  for (const a of step.actions) {
+    a.ids.forEach((id, i) => {
+      const st = state[id];
+      const at = a.at + (a.stagger || 0) * i;
+      if (t < at) return;
+      const p = ease(Math.min(1, (t - at) / a.dur));
+      if (a.from || a.to) {
+        const from = a.from || st.off, to = a.to || [0, 0, 0];
+        st.off = from.map((f, j) => f + (to[j] - f) * p);
+      }
+      st.vis = true;
+      if (a.spin) st.spin += a.spin * p;
+    });
+  }
+}
+
+const bases = [blank()];
+for (let k = 0; k < N; k++) { const s = clone(bases[k]); applyStep(s, S.steps[k], Infinity); bases.push(s); }
+const introStep = {};
+for (const d of S.instances) for (let k = 0; k < N; k++) if (!bases[k][d.id].vis && bases[k + 1][d.id].vis) { introStep[d.id] = k; break; }
+const movedIn = S.steps.map(st => new Set(st.actions.filter(a => a.from || a.to).flatMap(a => a.ids)));
+const stepDur = S.steps.map(st => {
+  let m = 0;
+  for (const a of st.actions) m = Math.max(m, a.at + (a.stagger || 0) * (a.ids.length - 1) + a.dur);
+  for (const c of [...st.arrows, ...st.callouts]) m = Math.max(m, c.t1);
+  return m + 0.4;
+});
+const firstFrom = {};
+for (const st of S.steps) for (const a of st.actions) for (const id of a.ids) if (a.from && !firstFrom[id]) firstFrom[id] = a.from;
+
+function countsFor(filter) {
+  const c = {};
+  for (const d of S.instances) if (!d.noCount && filter(d)) c[d.part] = (c[d.part] || 0) + 1;
+  return c;
+}
+const totalCounts = countsFor(() => true);
+const totalParts = Object.values(totalCounts).reduce((a, b) => a + b, 0);
+const STRUCT = new Set(['box', 'cylinder', 'extrude']);
+const HARDWARE = new Set(S.instances.filter(d => !STRUCT.has(d.kind) || (d.kind === 'box' && Math.max(...d.size) < 15)).map(d => d.part));
+
+// ---------- three.js ----------
+const canvas = $('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setClearColor(0xffffff);
+const scene = new THREE.Scene();
+const FRUSTUM = 100;
+const cam = new THREE.OrthographicCamera(-50, 50, 50, -50, -2000, 2000);
+const VIEW_DIR = new THREE.Vector3(1, 0.8, 1.2).normalize();
+cam.position.copy(VIEW_DIR).multiplyScalar(400);
+const controls = new OrbitControls(cam, canvas);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.enableZoom = false;
+controls.minPolarAngle = 0.25;
+controls.maxPolarAngle = 2.7; // 允许从下往上看（比如贴脚垫）
+controls.autoRotateSpeed = 1.4;
+
+scene.add(new THREE.AmbientLight(0xffffff, 1.5));
+const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+sun.position.set(0.4, 1, 0.6);
+scene.add(sun);
+
+const Y = new THREE.Vector3(0, 1, 0);
+const AXIS = { '+x': [1, 0, 0], '-x': [-1, 0, 0], '+y': [0, 1, 0], '-y': [0, -1, 0], '+z': [0, 0, 1], '-z': [0, 0, -1] };
+const edgeMat = new THREE.LineBasicMaterial({ color: 0x1b1b1b });
+const COLORS = { active: '#F6DD82', done: '#F8F2DE', plain: '#ECEAE4' };
+const SHADE = [0.86, 0.86, 1, 0.8, 0.94, 0.94]; // +x -x +y -y +z -z
+
+function withEdges(group, geo, mat, threshold = 30) {
+  const m = new THREE.Mesh(geo, mat);
+  group.add(m);
+  group.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, threshold), edgeMat));
+  return m;
+}
+function lambert(hex) { return new THREE.MeshLambertMaterial({ color: hex, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }); }
+
+const inst = {};
+const flatMats = shade => shade.map(() => new THREE.MeshBasicMaterial({ polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }));
+const DEG = Math.PI / 180;
+for (const d of S.instances) {
+  const root = new THREE.Group(), spinner = new THREE.Group();
+  root.add(spinner);
+  let mats = null, shade = null;
+  // 结构件（板、圆柱、拉伸体）用平涂：每个面一种明暗，配黑色描边
+  if (d.kind === 'box') {
+    shade = SHADE; mats = flatMats(shade);
+    withEdges(spinner, new THREE.BoxGeometry(...d.size), mats);
+  } else if (d.kind === 'cylinder') {
+    shade = [0.9, 1, 0.8]; mats = flatMats(shade); // 侧面、顶面、底面
+    withEdges(spinner, new THREE.CylinderGeometry(d.radius, d.radius, d.length, 32), mats, 40);
+  } else if (d.kind === 'extrude') {
+    shade = [1, 0.88]; mats = flatMats(shade); // 两个端面、侧面
+    const shape = new THREE.Shape(d.profile.map(([x, y]) => new THREE.Vector2(x, y)));
+    withEdges(spinner, new THREE.ExtrudeGeometry(shape, { depth: d.depth, bevelEnabled: false }).translate(0, 0, -d.depth / 2), mats);
+  } else if ((d.kind === 'cam_bolt' || d.kind === 'screw') && d.flush) {
+    // 沉头：拧到底后和板面齐平，只露出带内六角孔的圆头
+    withEdges(spinner, new THREE.CylinderGeometry(0.8, 0.8, 0.15, 24).translate(0, 0.075, 0), lambert('#C9CED4'), 40);
+    spinner.add(new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, 0.05, 6).translate(0, 0.17, 0), new THREE.MeshBasicMaterial({ color: 0x222222 })));
+  } else if (d.kind === 'cam_bolt') {
+    const shaft = new THREE.CylinderGeometry(0.35, 0.35, 3, 12).translate(0, 1.5, 0);
+    withEdges(spinner, shaft, lambert('#B9BFC6'), 40);
+    withEdges(spinner, new THREE.SphereGeometry(0.75, 16, 10).translate(0, 3.4, 0), lambert('#C9CED4'), 80);
+  } else if (d.kind === 'dowel') {
+    withEdges(spinner, new THREE.CylinderGeometry(0.6, 0.6, 1.6, 16).translate(0, 0.8, 0), lambert('#E2BE84'), 40);
+  } else if (d.kind === 'cam_lock') {
+    withEdges(spinner, new THREE.CylinderGeometry(1.3, 1.3, 0.45, 28).translate(0, 0.22, 0), lambert('#CDD1D6'), 40);
+    spinner.add(new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.2, 0.32).translate(0, 0.5, 0), new THREE.MeshBasicMaterial({ color: 0x222222 })));
+  } else if (d.kind === 'screw') {
+    withEdges(spinner, new THREE.CylinderGeometry(0.25, 0.25, 2.2, 10).translate(0, 1.1, 0), lambert('#B9BFC6'), 40);
+    withEdges(spinner, new THREE.CylinderGeometry(0.6, 0.6, 0.25, 16).translate(0, 2.3, 0), lambert('#C9CED4'), 40);
+  } else if (d.kind === 'pad') {
+    withEdges(spinner, new THREE.CylinderGeometry(1.6, 1.6, 0.5, 28).translate(0, 0.25, 0), lambert('#E4E1DA'), 40);
+  }
+  root.position.set(...d.pos);
+  if (d.axis && !mats) root.quaternion.setFromUnitVectors(Y, new THREE.Vector3(...AXIS[d.axis]));
+  if (d.rot) root.rotation.set(d.rot[0] * DEG, d.rot[1] * DEG, d.rot[2] * DEG, 'XYZ');
+  root.visible = false;
+  scene.add(root);
+  inst[d.id] = { d, root, spinner, mats, shade };
+}
+
+function paint(id, role) {
+  const it = inst[id];
+  if (!it.mats) return;
+  const base = new THREE.Color(it.d.plain ? COLORS.plain : COLORS[role]);
+  it.mats.forEach((m, i) => m.color.copy(base).multiplyScalar(it.shade[i]));
+}
+
+// arrows: built per step
+const arrowMat = new THREE.MeshBasicMaterial({ color: 0x161616 });
+let arrows = [];
+function buildArrows(list) {
+  arrows.forEach(a => scene.remove(a.obj));
+  arrows = list.map(a => {
+    const obj = new THREE.Group();
+    const shaftLen = a.len - 2.8;
+    obj.add(new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, shaftLen, 10).translate(0, -2.8 - shaftLen / 2, 0), arrowMat));
+    obj.add(new THREE.Mesh(new THREE.ConeGeometry(1.4, 2.8, 18).translate(0, -1.4, 0), arrowMat));
+    const dir = new THREE.Vector3(...a.dir).normalize();
+    obj.quaternion.setFromUnitVectors(Y, dir);
+    obj.visible = false;
+    scene.add(obj);
+    return { ...a, obj, dirV: dir, tip: new THREE.Vector3(...a.at) };
+  });
+}
+
+// ---------- app state ----------
+let mode = 'build', cur = 0, t = 0, paused = false, speed = 1, startedAt = null;
+let voiceOn = false, hintDismissed = false;
+const goal = { target: new THREE.Vector3(0, 10, 0), height: 70, dir: VIEW_DIR.clone(), turning: false };
+let viewHeight = 70;
+
+function setState(state, k) {
+  for (const id in inst) {
+    const it = inst[id], st = state[id];
+    it.root.visible = st.vis;
+    it.root.position.set(it.d.pos[0] + st.off[0], it.d.pos[1] + st.off[1], it.d.pos[2] + st.off[2]);
+    it.spinner.rotation.y = st.spin;
+  }
+}
+
+function go(k) {
+  if (k < 0) return;
+  if (k >= N) return setMode('done');
+  mode = 'build'; cur = k; t = 0; paused = false;
+  if (startedAt === null) startedAt = performance.now();
+  for (const d of S.instances) paint(d.id, (introStep[d.id] === k || movedIn[k].has(d.id)) ? 'active' : 'done');
+  buildArrows(S.steps[k].arrows);
+  setupManual(S.steps[k]);
+  goal.target.set(...S.steps[k].camera.target);
+  goal.height = S.steps[k].camera.height;
+  goal.dir.set(...(S.steps[k].camera.dir || VIEW_DIR.toArray())).normalize();
+  goal.turning = true;
+  controls.autoRotate = false;
+  renderUI();
+  startNarration();
+}
+
+// ---------- 原图模式：3D 不好表现的步骤，直接放说明书里这一步的插图 ----------
+const manualEl = $('manual'), mwrap = $('mwrap'), mimg = $('mimg');
+let manualStep = null;
+function setupManual(st) {
+  manualStep = st && st.mode === 'manual' && st.crop && pageUrl(st.crop.page) ? st : null;
+  manualEl.classList.toggle('on', !!manualStep);
+  if (!manualStep) return;
+  $('mlabel').textContent = T('manualLabel', { p: st.crop.page });
+  $('mhl').innerHTML = (st.highlights || []).map(() => '<div class="hl"></div>').join('');
+  const src = pageUrl(st.crop.page);
+  if (!mimg.src.endsWith(src)) { mimg.onload = layoutManual; mimg.src = src; } else layoutManual();
+}
+function layoutManual() {
+  if (!manualStep || !mimg.naturalWidth) return;
+  const [x0, y0, x1, y1] = manualStep.crop.box, nw = mimg.naturalWidth, nh = mimg.naturalHeight;
+  const cw = (x1 - x0) * nw, ch = (y1 - y0) * nh;
+  const s = Math.min(W * 0.86 / cw, (H - 170) / ch);
+  mimg.style.width = `${nw * s}px`;
+  const cx = (x0 * nw + cw / 2) * s, cy = (y0 * nh + ch / 2) * s;
+  mwrap.style.left = `${W / 2 - cx}px`; mwrap.style.top = `${H / 2 + 24 - cy}px`;
+  mwrap.style.transformOrigin = `${cx}px ${cy}px`;
+  [...$('mhl').children].forEach((el, i) => {
+    const [a, b, c, d] = manualStep.highlights[i];
+    Object.assign(el.style, { left: `${a * nw * s}px`, top: `${b * nh * s}px`, width: `${(c - a) * nw * s}px`, height: `${(d - b) * nh * s}px` });
+  });
+}
+
+// 按当前可见零件的包围盒取景：完成页、零件页、封面都用它，不同尺寸的家具都能放下
+function frameVisible(pad) {
+  const box = new THREE.Box3();
+  for (const id in inst) if (inst[id].root.visible) box.expandByObject(inst[id].root);
+  if (box.isEmpty()) return;
+  const c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+  goal.target.copy(c);
+  goal.height = Math.max(size.y, (size.x + size.z) * 0.62) * pad; // 等轴测下横向投影约为 (宽+深)×0.6
+}
+
+function setMode(m) {
+  mode = m;
+  setupManual(null);
+  buildArrows([]);
+  controls.autoRotate = m === 'done';
+  goal.dir.copy(VIEW_DIR); goal.turning = true;
+  for (const d of S.instances) paint(d.id, 'done');
+  const hideProps = s => { for (const d of S.instances) if (d.part === 'wall') s[d.id].vis = false; };
+  if (m === 'done') { const s = clone(bases[N]); hideProps(s); setState(s); frameVisible(1.3); }
+  if (m === 'parts') {
+    const s = clone(bases[N]);
+    for (const id in s) { s[id].off = (firstFrom[id] || [0, 0, 0]).map(v => v * 0.9); s[id].spin = 0; }
+    hideProps(s);
+    setState(s); frameVisible(1.2);
+  }
+  stopSpeech();
+  renderUI();
+  if (m === 'done') say(T('doneSay'));
+}
+
+function replay() { if (mode !== 'build') return; t = 0; paused = false; renderControls(); startNarration(); }
+function togglePause() { paused = !paused; renderControls(); }
+
+// ---------- UI ----------
+function needsRows(counts, tools, checkable) {
+  const rows = [];
+  for (const [part, n] of Object.entries(counts)) {
+    const p = S.parts[part];
+    rows.push(`<li>${ICON[p.icon] || ''}<span class="nm"><span>${p.label ? `<span class="lbl">${p.label}</span>` : ''}${p.name}</span><small>${p.dims || ''}</small></span><b>${n}×</b>${checkable ? '<input type="checkbox">' : ''}</li>`);
+  }
+  for (const tk of tools || []) {
+    const tl = S.tools[tk];
+    rows.push(`<li>${ICON[tl.icon]}<span class="nm"><span>${tl.name}</span></span></li>`);
+  }
+  return `<ul class="needs">${rows.join('')}</ul>`;
+}
+
+function renderUI() {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === mode));
+  $('tabStep').textContent = `${cur + 1}/${N}`;
+  const body = $('panelBody'), foot = $('panelFoot');
+  const isBuild = mode === 'build';
+  $('stepNum').textContent = isBuild ? cur + 1 : '';
+  $('caption').style.display = isBuild ? '' : 'none';
+
+  if (isBuild) {
+    const st = S.steps[cur];
+    const counts = countsFor(d => introStep[d.id] === cur);
+    const left = S.steps.slice(cur).reduce((a, s) => a + s.minutes, 0);
+    $('badge').innerHTML = Object.entries(counts).filter(([p]) => HARDWARE.has(p)).map(([p, n]) => `<div>${ICON[S.parts[p].icon]}${n}×</div>`).join('');
+    body.innerHTML = `
+      ${voiceOn || hintDismissed ? '' : `<div class="voicehint"><div class="mic">${micSvg}</div><div><b>${T('voiceHintTitle')}</b><span>${T('voiceHintBody')}</span></div><button class="go" data-act="voice">${T('turnOn')}</button><button class="x" data-act="dismiss">✕</button></div>`}
+      <div class="meta"><span>${T('stepOf', { n: cur + 1, N })}</span><span class="time">${T('timeLeft', { m: left })}</span></div>
+      <h1>${st.title}</h1>
+      <p class="desc">${st.desc}</p>
+      ${Object.keys(counts).length || st.tools.length ? `<h3>${T('need')}</h3>${needsRows(counts, st.tools)}` : ''}
+      ${st.tip ? `<div class="tip">${st.tip}</div>` : ''}
+      ${st.source?.pages?.length && pageUrl(1) ? `<h3>${T('compare')}</h3><div class="src">${st.source.pages.map(p => `<a href="${pageUrl(p)}" target="_blank" title="${T('page', { p })}"><img src="${pageUrl(p)}" alt="${T('page', { p })}"><span>${T('page', { p })}</span></a>`).join('')}</div>` : ''}`;
+    foot.innerHTML = `
+      <div class="actions">
+        <button class="back" data-act="prev" ${cur === 0 ? 'disabled' : ''} title="${T('prev')}">←</button>
+        <button class="primary" data-act="next"><span class="chk">✓</span>${cur === N - 1 ? T('finish') : T('nextStep')}<span class="arr">→</span></button>
+      </div>
+      <div class="hint"><span>${T('stuck')}</span><span><kbd>←</kbd> <kbd>→</kbd> ${T('keysMove')} · <kbd>R</kbd> ${T('keysReplay')}</span></div>`;
+  } else if (mode === 'parts') {
+    $('badge').innerHTML = '';
+    body.innerHTML = `
+      <div class="meta"><span>${S.product.name} · ${S.product.size}</span></div>
+      <h1>${T('partsTitle')}</h1>
+      <p class="desc">${T('partsDesc')}</p>
+      <h3>${T('partsCount', { n: totalParts })}</h3>
+      ${needsRows(totalCounts, Object.keys(S.tools), true)}
+      <p class="disclaimer">${S.disclaimer || T('disclaimer')}</p>`;
+    foot.innerHTML = `<div class="actions"><button class="primary" data-act="start"><span class="chk">✓</span>${T('start')}<span class="arr">→</span></button></div>`;
+  } else {
+    $('badge').innerHTML = '';
+    const mins = startedAt ? Math.max(1, Math.round((performance.now() - startedAt) / 60000)) : S.steps.reduce((a, s) => a + s.minutes, 0);
+    body.innerHTML = `
+      <h1 style="margin-top:4px">${T('doneTitle', { name: S.product.name })}</h1>
+      <p class="desc">${T('doneDesc')}</p>
+      <div class="stats"><div><small>${T('time')}</small><b>${T('minutes', { m: mins })}</b></div><div><small>${T('steps')}</small><b>${N}</b></div><div><small>${T('partsLabel')}</small><b>${totalParts}</b></div></div>
+      <h3>${T('before')}</h3>
+      <ul class="checks">${S.afterChecks.map(c => `<li>${c}</li>`).join('')}</ul>
+      <p class="disclaimer">${S.disclaimer || T('disclaimer')}</p>`;
+    foot.innerHTML = `<div class="actions"><button class="back" data-act="last" title="${T('lastStep')}">←</button><button class="primary" data-act="restart"><span class="chk">↻</span>${T('restart')}<span class="arr">→</span></button></div>`;
+  }
+  renderControls();
+}
+function renderControls() {
+  $('pauseBtn').classList.toggle('on', paused);
+  $('slowBtn').classList.toggle('on', speed < 1);
+  $('voiceBtn').classList.toggle('on', voiceOn);
+  $('voiceLabel').textContent = voiceOn ? (rec ? T('listening') : T('readOnly')) : T('voice');
+  document.querySelector('.controls').style.display = mode === 'build' ? '' : 'none';
+}
+const micSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act],[data-tab]');
+  if (!b) return;
+  const act = b.dataset.act, tab = b.dataset.tab;
+  if (tab === 'build') go(cur); else if (tab) setMode(tab);
+  if (act === 'next') go(cur + 1);
+  if (act === 'prev') go(cur - 1);
+  if (act === 'start') go(0);
+  if (act === 'restart') { startedAt = null; go(0); }
+  if (act === 'last') go(N - 1);
+  if (act === 'voice') toggleVoice();
+  if (act === 'dismiss') { hintDismissed = true; renderUI(); }
+});
+$('replayBtn').onclick = replay;
+$('pauseBtn').onclick = togglePause;
+$('slowBtn').onclick = () => { speed = speed < 1 ? 1 : 0.5; renderControls(); };
+$('voiceBtn').onclick = toggleVoice;
+$('speakBtn').onclick = () => { if (mode === 'build') say(S.steps[cur].say); };
+addEventListener('keydown', e => {
+  if (e.target.closest('input')) return;
+  if (e.key === 'ArrowRight') go(mode === 'build' ? cur + 1 : 0);
+  else if (e.key === 'ArrowLeft') mode === 'build' ? go(cur - 1) : go(N - 1);
+  else if (e.key === 'r' || e.key === 'R') replay();
+  else if (e.key === ' ') { e.preventDefault(); togglePause(); }
+});
+
+let toastTimer;
+function toast(msg) { const el = $('toast'); el.textContent = msg; el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2600); }
+
+// ---------- narration (speechSynthesis) + karaoke caption ----------
+const synth = window.speechSynthesis;
+let voices = [];
+const loadVoices = () => { voices = synth ? synth.getVoices() : []; };
+if (synth) { loadVoices(); synth.onvoiceschanged = loadVoices; }
+const speech = { active: false, text: '', start: 0, idx: -1, done: false };
+
+function say(text) {
+  if (!synth) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = LANG === 'zh' ? 'zh-CN' : 'en-US';
+  const v = LANG === 'zh'
+    ? voices.find(v => /zh[-_]CN/i.test(v.lang) && /Tingting|婷婷|Xiaoxiao|晓晓|Google/i.test(v.name)) || voices.find(v => /zh[-_]CN/i.test(v.lang))
+    : voices.find(v => /en[-_]US/i.test(v.lang) && /Samantha|Google US|Aria|Jenny/i.test(v.name)) || voices.find(v => /en[-_]US/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
+  if (v) u.voice = v;
+  u.rate = 1.05;
+  Object.assign(speech, { active: true, text, start: performance.now(), idx: -1, done: false });
+  u.onboundary = e => { speech.idx = e.charIndex + (e.charLength || 1); };
+  u.onend = u.onerror = () => { if (speech.text === text) { speech.active = false; speech.done = true; speech.endedAt = performance.now(); } };
+  synth.speak(u);
+}
+function stopSpeech() { if (synth) synth.cancel(); speech.active = false; }
+function startNarration() {
+  speech.text = S.steps[cur].say; speech.done = false; speech.active = false;
+  if (voiceOn) say(S.steps[cur].say);
+}
+let capCache = '';
+function updateCaption() {
+  if (mode !== 'build') return;
+  const text = S.steps[cur].say;
+  let p;
+  if (speech.active && speech.text === text) p = speech.idx >= 0 ? speech.idx / text.length : (performance.now() - speech.start) / (text.length * (LANG === 'zh' ? 210 : 65));
+  else if (speech.done && speech.text === text) p = 1;
+  else p = t / (stepDur[cur] * 0.9);
+  const n = Math.round(Math.min(1, p) * text.length);
+  const html = `${text.slice(0, n)}<span class="rest">${text.slice(n)}</span>`;
+  if (html !== capCache) { $('capText').innerHTML = html; capCache = html; }
+  $('caption').classList.toggle('live', speech.active);
+}
+
+// ---------- voice commands (SpeechRecognition) ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, lastCmd = 0;
+const COMMANDS = [
+  [/下一步|下一个|继续|好了|搞定|next|done|continue/, () => go(mode === 'build' ? cur + 1 : 0), 'cmdNext'],
+  [/上一步|上一个|返回|back|previous/, () => go(mode === 'build' ? cur - 1 : N - 1), 'cmdBack'],
+  [/重播|再来|重复|再看|再放|repeat|again|replay/, replay, 'cmdRepeat'],
+  [/暂停|停一下|等一下|pause|wait|stop/, togglePause, 'cmdPause'],
+];
+function toggleVoice() {
+  if (!voiceOn && !SR) { toast(T('noSR')); voiceOn = true; renderUI(); startNarration(); return; }
+  if (voiceOn && !SR) { voiceOn = false; stopSpeech(); renderUI(); return; }
+  voiceOn = !voiceOn;
+  if (voiceOn) { startRec(); startNarration(); } else { if (rec) rec.abort(); rec = null; stopSpeech(); }
+  renderUI();
+}
+function startRec() {
+  rec = new SR();
+  rec.lang = LANG === 'zh' ? 'zh-CN' : 'en-US'; rec.continuous = true; rec.interimResults = true;
+  rec.onresult = e => {
+    if (speech.active || performance.now() - (speech.endedAt || 0) < 400) return; // 别把自己的朗读当口令
+    for (let i = e.resultIndex; i < e.results.length; i++) handleSpeech(e.results[i][0].transcript.toLowerCase());
+  };
+  rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { toast(T('micDenied')); rec = null; renderControls(); } };
+  rec.onend = () => { if (voiceOn && rec) try { rec.start(); } catch {} };
+  try { rec.start(); } catch {}
+}
+function handleSpeech(tx) {
+  const now = performance.now();
+  if (now - lastCmd < 1500) return;
+  for (const [re, fn, label] of COMMANDS) if (re.test(tx)) {
+    lastCmd = now;
+    const h = $('heard'); h.textContent = T('heard', { c: T(label) }); h.classList.add('show');
+    setTimeout(() => h.classList.remove('show'), 1600);
+    fn(); return;
+  }
+}
+
+// ---------- callout overlay ----------
+const tmpV = new THREE.Vector3();
+let lensIcon = '';
+function toScreen(p, w, h) { tmpV.set(...p).project(cam); return [(tmpV.x + 1) / 2 * w, (1 - tmpV.y) / 2 * h]; }
+function updateCallout(w, h) {
+  const c = mode === 'build' && !manualStep ? S.steps[cur].callouts.find(c => t >= c.t0 && t <= c.t1) : null;
+  const el = $('callout'), svg = $('leader');
+  if (!c) { el.classList.remove('show'); svg.innerHTML = ''; return; }
+  if (lensIcon !== c.icon + c.text) { $('lens').innerHTML = LENS[c.icon]; $('ctext').textContent = c.text; lensIcon = c.icon + c.text; }
+  const [x, y] = toScreen(c.at, w, h);
+  const dx = x > w - 190 ? -150 : 90, dy = y < 200 ? 70 : -150;
+  const cx = x + dx + 56, cy = y + dy + 56;
+  el.style.left = `${x + dx}px`; el.style.top = `${y + dy}px`;
+  el.classList.add('show');
+  const ang = Math.atan2(y - cy, x - cx);
+  svg.innerHTML = `<line x1="${x}" y1="${y}" x2="${cx + Math.cos(ang) * 56}" y2="${cy + Math.sin(ang) * 56}" stroke="#161616" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="4" fill="#161616"/><circle cx="${x}" cy="${y}" r="9" fill="none" stroke="#161616" stroke-width="1.2" opacity=".5"/>`;
+}
+
+// ---------- loop ----------
+const stage = $('stage');
+let W = 1, H = 1;
+new ResizeObserver(() => {
+  W = canvas.clientWidth; H = canvas.clientHeight; // 按画布本身的尺寸渲染：手机上卡片里还有字幕和控制条
+  renderer.setSize(W, H, false);
+  layoutManual();
+}).observe(canvas);
+
+const clock = new THREE.Clock();
+const delta = new THREE.Vector3();
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const now = performance.now() / 1000;
+  if (mode === 'build') {
+    if (!paused) t = Math.min(t + dt * speed, stepDur[cur]);
+    const s = clone(bases[cur]);
+    applyStep(s, S.steps[cur], t);
+    setState(s);
+    for (const a of arrows) {
+      a.obj.visible = t >= a.t0 && t <= a.t1;
+      const bob = 1.5 + Math.sin(now * 7) * 1.2;
+      a.obj.position.copy(a.tip).addScaledVector(a.dirV, -bob);
+    }
+  }
+  // camera: glide target and framing toward the step's goal, keep the user's orbit angle
+  delta.subVectors(goal.target, controls.target).multiplyScalar(0.08);
+  controls.target.add(delta); cam.position.add(delta);
+  if (goal.turning) { // 转到这一步指定的观察方向，转到位后交还给用户拖动
+    const off = cam.position.clone().sub(controls.target), len = off.length();
+    const now = off.divideScalar(len);
+    if (now.angleTo(goal.dir) < 0.004) goal.turning = false;
+    now.lerp(goal.dir, 0.08).normalize();
+    cam.position.copy(controls.target).addScaledVector(now, len);
+  }
+  viewHeight += (goal.height - viewHeight) * 0.08;
+  const aspect = W / H;
+  const needH = Math.max(viewHeight, viewHeight * 1.5 / aspect); // 等轴测下家具横向更宽，窄屏按宽度取景
+  cam.left = -FRUSTUM * aspect / 2; cam.right = FRUSTUM * aspect / 2; cam.top = FRUSTUM / 2; cam.bottom = -FRUSTUM / 2;
+  cam.zoom = FRUSTUM / needH;
+  cam.updateProjectionMatrix();
+  controls.update();
+  renderer.render(scene, cam);
+  updateCaption();
+  if (manualStep) mwrap.style.transform = `scale(${1 + 0.06 * ease(Math.min(1, t / stepDur[cur]))})`; // 慢慢推近
+  updateCallout(W, H);
+  requestAnimationFrame(frame);
+}
+controls.target.copy(goal.target);
+cam.position.copy(goal.target).addScaledVector(VIEW_DIR, 400);
+const THUMB = params.has('thumb'); // 给案例页生成封面用：只渲染装好的成品
+if (THUMB) {
+  document.body.classList.add('thumb');
+  setMode('done');
+  controls.autoRotate = false;
+  viewHeight = goal.height; controls.target.copy(goal.target); cam.position.copy(goal.target).addScaledVector(VIEW_DIR, 400);
+} else {
+  // ?step=3 直接打开第 3 步，step=parts / step=done 打开零件页 / 完成页（方便分享某一步）
+  const st = params.get('step');
+  if (st === 'parts' || st === 'done') setMode(st);
+  else go(Math.min(N - 1, Math.max(0, (parseInt(st, 10) || 1) - 1)));
+}
+frame();
+</script>
+</body>
+</html>

@@ -1,0 +1,1306 @@
+{
+ "product": {
+  "name": "KALLAX",
+  "sub": "Shelf unit 2×2",
+  "size": "77 × 77 × 39 cm"
+ },
+ "parts": {
+  "A": {
+   "name": "Top / bottom panel",
+   "label": "A",
+   "dims": "77 × 39 cm, hollow board",
+   "icon": "panel"
+  },
+  "B": {
+   "name": "Side panel",
+   "label": "B",
+   "dims": "69 × 39 cm, hollow board",
+   "icon": "panel"
+  },
+  "C": {
+   "name": "Middle shelf",
+   "label": "C",
+   "dims": "69 × 39 cm",
+   "icon": "panel"
+  },
+  "D": {
+   "name": "Short divider",
+   "label": "D",
+   "dims": "34 × 39 cm",
+   "icon": "panel"
+  },
+  "cam_bolt": {
+   "name": "Cam bolt",
+   "dims": "34 mm",
+   "icon": "bolt"
+  },
+  "cam_lock": {
+   "name": "Cam lock",
+   "dims": "Ø 15 mm",
+   "icon": "camlock"
+  },
+  "dowel": {
+   "name": "Wooden dowel",
+   "dims": "8 × 30 mm",
+   "icon": "dowel"
+  },
+  "bracket": {
+   "name": "Anti-tip bracket",
+   "dims": "1 set included",
+   "icon": "bracket"
+  },
+  "wall": {
+   "name": "Wall"
+  }
+ },
+ "tools": {
+  "screwdriver": {
+   "name": "Phillips screwdriver",
+   "icon": "screwdriver"
+  },
+  "hammer": {
+   "name": "Hammer",
+   "icon": "hammer"
+  },
+  "drill": {
+   "name": "Drill (wall screws sold separately)",
+   "icon": "drill"
+  }
+ },
+ "instances": [
+  {
+   "id": "bottom",
+   "part": "A",
+   "kind": "box",
+   "size": [
+    77,
+    3.8,
+    39
+   ],
+   "pos": [
+    0,
+    1.9,
+    0
+   ]
+  },
+  {
+   "id": "cbB1",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    -36.6,
+    3.8,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "cbB2",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    -36.6,
+    3.8,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "cbB3",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    36.6,
+    3.8,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "cbB4",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    36.6,
+    3.8,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "dwB1",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    3.8,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "dwB2",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    3.8,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "divL",
+   "part": "D",
+   "kind": "box",
+   "size": [
+    1.6,
+    33.9,
+    39
+   ],
+   "pos": [
+    0,
+    20.75,
+    0
+   ]
+  },
+  {
+   "id": "dwL1",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    37.7,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "dwL2",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    37.7,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "shelf",
+   "part": "C",
+   "kind": "box",
+   "size": [
+    69.4,
+    1.6,
+    39
+   ],
+   "pos": [
+    0,
+    38.5,
+    0
+   ]
+  },
+  {
+   "id": "dwS1",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    -34.7,
+    38.5,
+    12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "dwS2",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    -34.7,
+    38.5,
+    -12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "dwS3",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    34.7,
+    38.5,
+    12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "dwS4",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    34.7,
+    38.5,
+    -12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "dwS5",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    39.3,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "dwS6",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    39.3,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "divU",
+   "part": "D",
+   "kind": "box",
+   "size": [
+    1.6,
+    33.9,
+    39
+   ],
+   "pos": [
+    0,
+    56.25,
+    0
+   ]
+  },
+  {
+   "id": "dwU1",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    73.2,
+    12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "dwU2",
+   "part": "dowel",
+   "kind": "dowel",
+   "pos": [
+    0,
+    73.2,
+    -12
+   ],
+   "axis": "+y"
+  },
+  {
+   "id": "sideL",
+   "part": "B",
+   "kind": "box",
+   "size": [
+    3.8,
+    69.4,
+    39
+   ],
+   "pos": [
+    -36.6,
+    38.5,
+    0
+   ]
+  },
+  {
+   "id": "clL1",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    -34.7,
+    6,
+    12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "clL2",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    -34.7,
+    6,
+    -12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "clL3",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    -34.7,
+    71,
+    12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "clL4",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    -34.7,
+    71,
+    -12
+   ],
+   "axis": "+x"
+  },
+  {
+   "id": "sideR",
+   "part": "B",
+   "kind": "box",
+   "size": [
+    3.8,
+    69.4,
+    39
+   ],
+   "pos": [
+    36.6,
+    38.5,
+    0
+   ]
+  },
+  {
+   "id": "clR1",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    34.7,
+    6,
+    12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "clR2",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    34.7,
+    6,
+    -12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "clR3",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    34.7,
+    71,
+    12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "clR4",
+   "part": "cam_lock",
+   "kind": "cam_lock",
+   "pos": [
+    34.7,
+    71,
+    -12
+   ],
+   "axis": "-x"
+  },
+  {
+   "id": "top",
+   "part": "A",
+   "kind": "box",
+   "size": [
+    77,
+    3.8,
+    39
+   ],
+   "pos": [
+    0,
+    75.1,
+    0
+   ]
+  },
+  {
+   "id": "cbT1",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    -36.6,
+    73.2,
+    12
+   ],
+   "axis": "-y"
+  },
+  {
+   "id": "cbT2",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    -36.6,
+    73.2,
+    -12
+   ],
+   "axis": "-y"
+  },
+  {
+   "id": "cbT3",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    36.6,
+    73.2,
+    12
+   ],
+   "axis": "-y"
+  },
+  {
+   "id": "cbT4",
+   "part": "cam_bolt",
+   "kind": "cam_bolt",
+   "pos": [
+    36.6,
+    73.2,
+    -12
+   ],
+   "axis": "-y"
+  },
+  {
+   "id": "wall",
+   "part": "wall",
+   "kind": "box",
+   "size": [
+    150,
+    120,
+    1
+   ],
+   "pos": [
+    0,
+    60,
+    -21
+   ],
+   "noCount": true,
+   "plain": true
+  },
+  {
+   "id": "bk1",
+   "part": "bracket",
+   "kind": "box",
+   "size": [
+    8,
+    0.5,
+    5
+   ],
+   "pos": [
+    0,
+    77.25,
+    -17
+   ]
+  },
+  {
+   "id": "bk2",
+   "part": "bracket",
+   "kind": "box",
+   "size": [
+    8,
+    7,
+    0.5
+   ],
+   "pos": [
+    0,
+    74,
+    -20.25
+   ],
+   "noCount": true
+  }
+ ],
+ "steps": [
+  {
+   "title": "Add bolts and dowels to the bottom panel",
+   "desc": "Lay bottom panel A flat. Hand-screw 4 cam bolts into the holes at both ends, then tap 2 dowels halfway into the middle holes.",
+   "tip": "The thick outer board is hollow, so tap the dowels gently. Too much force can crack the edge.",
+   "say": "Step one. Lay the bottom panel flat. Screw four cam bolts into the ends by hand, then gently tap two dowels into the middle.",
+   "minutes": 3,
+   "tools": [
+    "hammer"
+   ],
+   "camera": {
+    "target": [
+     0,
+     6,
+     0
+    ],
+    "height": 62
+   },
+   "actions": [
+    {
+     "ids": [
+      "bottom"
+     ],
+     "at": 0,
+     "dur": 1,
+     "from": [
+      0,
+      25,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "cbB1",
+      "cbB2",
+      "cbB3",
+      "cbB4"
+     ],
+     "at": 1.2,
+     "dur": 0.8,
+     "stagger": 0.25,
+     "from": [
+      0,
+      8,
+      0
+     ],
+     "spin": 12.6
+    },
+    {
+     "ids": [
+      "dwB1",
+      "dwB2"
+     ],
+     "at": 2.8,
+     "dur": 0.5,
+     "stagger": 0.3,
+     "from": [
+      0,
+      8,
+      0
+     ]
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      9,
+      12
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 9,
+     "t0": 2.6,
+     "t1": 3.8
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      36.6,
+      7,
+      12
+     ],
+     "icon": "twist",
+     "text": "Hand-tighten only",
+     "t0": 1.2,
+     "t1": 2.7
+    },
+    {
+     "at": [
+      0,
+      5.4,
+      12
+     ],
+     "icon": "tap",
+     "text": "Tap halfway in",
+     "t0": 2.8,
+     "t1": 4.4
+    }
+   ]
+  },
+  {
+   "title": "Stand up the lower divider",
+   "desc": "Line up short divider D with the dowels in the middle of the bottom panel and push it down fully. Then tap 2 dowels into its top edge.",
+   "tip": "Both ends of the divider have holes, so either end can face down. If it won't go all the way, pat it with your palm. Don't hit the panel directly with the hammer.",
+   "say": "Step two. Line up the short divider with the middle dowels and push it all the way down. Then tap two dowels into the top.",
+   "minutes": 2,
+   "tools": [
+    "hammer"
+   ],
+   "camera": {
+    "target": [
+     0,
+     18,
+     0
+    ],
+    "height": 78
+   },
+   "actions": [
+    {
+     "ids": [
+      "divL"
+     ],
+     "at": 0,
+     "dur": 1.2,
+     "from": [
+      0,
+      40,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "dwL1",
+      "dwL2"
+     ],
+     "at": 1.6,
+     "dur": 0.5,
+     "stagger": 0.3,
+     "from": [
+      0,
+      8,
+      0
+     ]
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      44,
+      0
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 12,
+     "t0": 0,
+     "t1": 1.3
+    }
+   ],
+   "callouts": []
+  },
+  {
+   "title": "Add the middle shelf",
+   "desc": "Lay middle shelf C flat on the divider. Tap 2 dowels into each end, then fit 2 more in the middle of the top surface.",
+   "tip": "Make sure the dowels at both ends stick out equally, so the side panels slide on in one go.",
+   "say": "Step three. Place the middle shelf on the divider. Tap two dowels into each end, then add two more in the middle of the top.",
+   "minutes": 4,
+   "tools": [
+    "hammer"
+   ],
+   "camera": {
+    "target": [
+     0,
+     26,
+     0
+    ],
+    "height": 92,
+    "dir": [
+     0.05,
+     0.7,
+     1.2
+    ]
+   },
+   "actions": [
+    {
+     "ids": [
+      "shelf"
+     ],
+     "at": 0,
+     "dur": 1.2,
+     "from": [
+      0,
+      30,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "dwS1",
+      "dwS2"
+     ],
+     "at": 1.6,
+     "dur": 0.5,
+     "stagger": 0.25,
+     "from": [
+      -8,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "dwS3",
+      "dwS4"
+     ],
+     "at": 1.6,
+     "dur": 0.5,
+     "stagger": 0.25,
+     "from": [
+      8,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "dwS5",
+      "dwS6"
+     ],
+     "at": 2.5,
+     "dur": 0.5,
+     "stagger": 0.25,
+     "from": [
+      0,
+      8,
+      0
+     ]
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      46,
+      0
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 12,
+     "t0": 0,
+     "t1": 1.3
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      34.7,
+      38.5,
+      12
+     ],
+     "icon": "tap",
+     "text": "2 per end",
+     "t0": 1.6,
+     "t1": 3.2
+    }
+   ]
+  },
+  {
+   "title": "Stand up the upper divider",
+   "desc": "Push the second short divider D onto the dowels in the middle of the middle shelf. Then tap 2 dowels into its top edge.",
+   "tip": "Keep the upper and lower dividers in a straight line. If they're crooked, the top panel won't fit.",
+   "say": "Step four. Push the second short divider onto the middle of the shelf, then tap two dowels into its top.",
+   "minutes": 2,
+   "tools": [
+    "hammer"
+   ],
+   "camera": {
+    "target": [
+     0,
+     36,
+     0
+    ],
+    "height": 108
+   },
+   "actions": [
+    {
+     "ids": [
+      "divU"
+     ],
+     "at": 0,
+     "dur": 1.2,
+     "from": [
+      0,
+      40,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "dwU1",
+      "dwU2"
+     ],
+     "at": 1.6,
+     "dur": 0.5,
+     "stagger": 0.3,
+     "from": [
+      0,
+      8,
+      0
+     ]
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      80,
+      0
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 12,
+     "t0": 0,
+     "t1": 1.3
+    }
+   ],
+   "callouts": []
+  },
+  {
+   "title": "Attach the left side and tighten the lower cam locks",
+   "desc": "Push left side panel B onto the bottom panel's bolts and the middle shelf's dowels. Press 4 cam locks in from the inside, and tighten the lower 2 first.",
+   "tip": "Point the cam lock arrow toward the bolt before turning. About a half turn clockwise locks it. Don't overtighten.",
+   "say": "Step five. Push the left side onto the bolts and dowels. Press in four cam locks from inside, then tighten the bottom two with a half turn clockwise.",
+   "minutes": 4,
+   "tools": [
+    "screwdriver"
+   ],
+   "camera": {
+    "target": [
+     -8,
+     36,
+     0
+    ],
+    "height": 112
+   },
+   "actions": [
+    {
+     "ids": [
+      "sideL"
+     ],
+     "at": 0,
+     "dur": 1.4,
+     "from": [
+      -30,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "clL1",
+      "clL2",
+      "clL3",
+      "clL4"
+     ],
+     "at": 1.7,
+     "dur": 0.5,
+     "stagger": 0.15,
+     "from": [
+      8,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "clL1",
+      "clL2"
+     ],
+     "at": 2.9,
+     "dur": 1.0,
+     "stagger": 0.2,
+     "spin": 3.14
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      -43,
+      40,
+      0
+     ],
+     "dir": [
+      1,
+      0,
+      0
+     ],
+     "len": 12,
+     "t0": 0,
+     "t1": 1.4
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      -34.7,
+      6,
+      12
+     ],
+     "icon": "twist",
+     "text": "Half turn clockwise",
+     "t0": 2.9,
+     "t1": 4.6
+    }
+   ]
+  },
+  {
+   "title": "Attach the right side and tighten the lower cam locks",
+   "desc": "Push right side panel B into place the same way. Press in 4 cam locks and tighten the lower 2.",
+   "tip": "If the side panel won't go on, check whether the dowels at the ends of the middle shelf stick out too far.",
+   "say": "Step six. Do the same on the right side. Push it into place, press in four cam locks, and tighten the bottom two.",
+   "minutes": 4,
+   "tools": [
+    "screwdriver"
+   ],
+   "camera": {
+    "target": [
+     8,
+     36,
+     0
+    ],
+    "height": 112,
+    "dir": [
+     -1,
+     0.7,
+     1.2
+    ]
+   },
+   "actions": [
+    {
+     "ids": [
+      "sideR"
+     ],
+     "at": 0,
+     "dur": 1.4,
+     "from": [
+      30,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "clR1",
+      "clR2",
+      "clR3",
+      "clR4"
+     ],
+     "at": 1.7,
+     "dur": 0.5,
+     "stagger": 0.15,
+     "from": [
+      -8,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "clR1",
+      "clR2"
+     ],
+     "at": 2.9,
+     "dur": 1.0,
+     "stagger": 0.2,
+     "spin": -3.14
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      43,
+      40,
+      0
+     ],
+     "dir": [
+      -1,
+      0,
+      0
+     ],
+     "len": 12,
+     "t0": 0,
+     "t1": 1.4
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      34.7,
+      6,
+      12
+     ],
+     "icon": "twist",
+     "text": "Half turn clockwise",
+     "t0": 2.9,
+     "t1": 4.6
+    }
+   ]
+  },
+  {
+   "title": "Add bolts to the top panel",
+   "desc": "Take the other A panel as the top. Flip it so the side with holes faces down, and screw 4 cam bolts into the ends.",
+   "tip": "The top and bottom panels are identical. The side with holes faces inward.",
+   "say": "Step seven. Take the other big panel for the top. Holes facing down, screw four cam bolts into the ends.",
+   "minutes": 2,
+   "tools": [],
+   "camera": {
+    "target": [
+     0,
+     58,
+     0
+    ],
+    "height": 128,
+    "dir": [
+     0.7,
+     -0.45,
+     1.2
+    ]
+   },
+   "actions": [
+    {
+     "ids": [
+      "top"
+     ],
+     "at": 0,
+     "dur": 1.0,
+     "from": [
+      0,
+      60,
+      0
+     ],
+     "to": [
+      0,
+      32,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "cbT1",
+      "cbT2",
+      "cbT3",
+      "cbT4"
+     ],
+     "at": 1.3,
+     "dur": 0.8,
+     "stagger": 0.25,
+     "from": [
+      0,
+      24,
+      0
+     ],
+     "to": [
+      0,
+      32,
+      0
+     ],
+     "spin": 12.6
+    }
+   ],
+   "arrows": [],
+   "callouts": [
+    {
+     "at": [
+      36.6,
+      102,
+      12
+     ],
+     "icon": "twist",
+     "text": "Hand-tighten fully",
+     "t0": 1.3,
+     "t1": 3.0
+    }
+   ]
+  },
+  {
+   "title": "Place the top panel and lock it",
+   "desc": "Line up the top panel with the dowels on the side panels and dividers and press down. Then tighten the 4 upper cam locks on the side panels.",
+   "tip": "It's easier with two people: one holds the sides, the other aligns the holes and presses down.",
+   "say": "Step eight. Line up the top panel with the dowels and press down. Then tighten the four upper cam locks on both sides.",
+   "minutes": 4,
+   "tools": [
+    "screwdriver"
+   ],
+   "camera": {
+    "target": [
+     0,
+     40,
+     0
+    ],
+    "height": 115
+   },
+   "actions": [
+    {
+     "ids": [
+      "top",
+      "cbT1",
+      "cbT2",
+      "cbT3",
+      "cbT4"
+     ],
+     "at": 0,
+     "dur": 1.5,
+     "to": [
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "clL3",
+      "clL4"
+     ],
+     "at": 1.9,
+     "dur": 1.0,
+     "stagger": 0.2,
+     "spin": 3.14
+    },
+    {
+     "ids": [
+      "clR3",
+      "clR4"
+     ],
+     "at": 2.3,
+     "dur": 1.0,
+     "stagger": 0.2,
+     "spin": -3.14
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      112,
+      14
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 14,
+     "t0": 0,
+     "t1": 1.4
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      34.7,
+      71,
+      12
+     ],
+     "icon": "twist",
+     "text": "Lock top 4",
+     "t0": 1.9,
+     "t1": 3.8
+    }
+   ]
+  },
+  {
+   "title": "Secure it to the wall",
+   "desc": "Push the unit against the wall. Screw one end of the anti-tip bracket to the back of the top panel, and fix the other end to the wall with a screw.",
+   "tip": "Wall screws and anchors aren't included. Buy them to suit your wall type. Don't skip this step if you have children at home.",
+   "say": "Last step. Push the unit against the wall, and use the anti-tip bracket to fix the top panel to the wall.",
+   "minutes": 4,
+   "tools": [
+    "screwdriver",
+    "drill"
+   ],
+   "camera": {
+    "target": [
+     0,
+     44,
+     -4
+    ],
+    "height": 122,
+    "dir": [
+     0.6,
+     1,
+     -1
+    ]
+   },
+   "actions": [
+    {
+     "ids": [
+      "wall"
+     ],
+     "at": 0,
+     "dur": 0.01,
+     "from": [
+      0,
+      0,
+      0
+     ]
+    },
+    {
+     "ids": [
+      "bk1",
+      "bk2"
+     ],
+     "at": 0.6,
+     "dur": 0.7,
+     "from": [
+      0,
+      10,
+      0
+     ]
+    }
+   ],
+   "arrows": [
+    {
+     "at": [
+      0,
+      80,
+      -17
+     ],
+     "dir": [
+      0,
+      -1,
+      0
+     ],
+     "len": 10,
+     "t0": 0.4,
+     "t1": 1.6
+    }
+   ],
+   "callouts": [
+    {
+     "at": [
+      0,
+      77.5,
+      -17
+     ],
+     "icon": "screw",
+     "text": "Wall screws sold separately",
+     "t0": 1.4,
+     "t1": 3.6
+    }
+   ]
+  }
+ ],
+ "afterChecks": [
+  "Check that it's secured to the wall",
+  "Leftover hardware is normal. Keep it as spares",
+  "Flatten the carton and recycle it"
+ ],
+ "lang": "en"
+}

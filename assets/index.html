@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assembly manuals, animated</title>
+<meta name="description" content="Turn a paper assembly manual into an interactive 3D step-by-step guide.">
+<style>
+  :root {
+    --bg: #F3F1EC; --card: #FFFFFF; --ink: #161616; --muted: #6E6B65; --faint: #A19D95;
+    --line: #E8E5DD; --soft: #F6F4EF; --accent: #F5CF2F; --ok: #2F7D4F; --bad: #B3261E;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Helvetica Neue", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px 48px; }
+  header { display: flex; align-items: center; gap: 10px; height: 64px; }
+  .logo { width: 26px; height: 26px; border-radius: 50%; background: var(--accent); box-shadow: inset 0 0 0 6px var(--ink); position: relative; }
+  .logo::after { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--accent); }
+  header b { font-size: 15px; }
+  .lang { margin-left: auto; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: #fff; }
+  .hero { padding: 36px 0 28px; }
+  .hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 0 14px; letter-spacing: -.02em; max-width: 920px; text-wrap: balance; }
+  .hero p { color: #3B3934; font-size: 16px; line-height: 1.7; margin: 0; max-width: 760px; text-wrap: pretty; }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; font-size: 13px; }
+  .flow span { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; }
+  .flow i { font-style: normal; color: var(--faint); align-self: center; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-top: 28px; }
+  .case { background: var(--card); border-radius: 18px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; box-shadow: 0 1px 0 rgba(0,0,0,.03), 0 8px 30px rgba(40,30,0,.05); transition: transform .15s; }
+  .case:hover { transform: translateY(-2px); }
+  .cover { aspect-ratio: 4 / 3; background: #fff; border-bottom: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+  .cover img.thumb { object-fit: contain; padding: 10px; }
+  .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .name { font-size: 18px; font-weight: 700; }
+  .name small { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 6px; }
+  .stats { display: flex; gap: 14px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+  .stats b { color: var(--ink); font-size: 15px; margin-right: 3px; }
+  .badge { font-size: 12px; border-radius: 8px; padding: 4px 8px; align-self: flex-start; }
+  .badge.ok { background: #E6F2EA; color: var(--ok); }
+  .badge.bad { background: #FBE9E7; color: var(--bad); }
+  .go { margin-top: auto; font-size: 14px; font-weight: 600; }
+  .note { margin-top: 32px; font-size: 12px; color: var(--faint); line-height: 1.6; max-width: 920px; text-wrap: pretty; }
+  details { font-size: 12px; color: var(--muted); }
+  details summary { cursor: pointer; }
+  details li { margin: 2px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><span class="logo"></span><b data-i18n="brand"></b><button class="lang" id="langBtn"></button></header>
+  <section class="hero">
+    <h1 data-i18n="h1"></h1>
+    <p data-i18n="lead"></p>
+    <div class="flow" id="flow"></div>
+  </section>
+  <div class="grid" id="grid"></div>
+  <p class="note" data-i18n="note"></p>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const store = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+const LANG = (params.get('lang') || store.get('lang') || 'en') === 'zh' ? 'zh' : 'en';
+const I18N = {
+  en: {
+    brand: 'Assembly manuals, animated', title: 'Assembly manuals, animated',
+    h1: 'Turn a paper manual into a 3D guide you can follow',
+    lead: 'Drop in a flat-pack assembly manual PDF. Claude reads every page, copies the parts list, and builds an interactive step-by-step 3D animation. Each guide is checked against the manual for part counts, geometry and visibility.',
+    flow: ['Manual PDF', 'Read the parts list', 'Build the 3D scene', 'Check counts, geometry, visibility', 'Auto-repair'],
+    pages: 'manual pages', steps: 'steps', parts: 'parts', ok: 'All checks passed', repaired: 'auto-repaired {n}×', bad: '{n} issues left',
+    notes: '{n} notes', open: 'Open the 3D guide →',
+    note: 'Guides are generated by AI for demonstration and may contain mistakes. Always follow the paper manual that comes with the product. Not affiliated with or endorsed by any furniture brand. Product names are trademarks of their owners.',
+    other: '中文', cover: '{name} 3D model',
+    empty: 'No guides yet. Run scripts/make.py "<product name>" to make the first one, or open the hand-written example: guide.html?scene=kallax-handmade',
+  },
+  zh: {
+    brand: '说明书变 3D 指导', title: '说明书变 3D 指导',
+    h1: '把纸质说明书，变成会动的组装指导',
+    lead: '丢进一份家具组装说明书 PDF，Claude 逐页读图、照抄零件清单，再生成可交互的 3D 分步动画。每个案例都对照说明书核对过零件数、几何和可见性。',
+    flow: ['说明书 PDF', '读图抽取清单', '生成 3D 场景', '零件数 / 几何 / 可见性校验', '自动修复'],
+    pages: '页说明书', steps: '步', parts: '个零件', ok: '校验通过', repaired: '自动修复 {n} 轮', bad: '还有 {n} 个问题未解决',
+    notes: '{n} 条提示', open: '打开 3D 指导 →',
+    note: '案例由 AI 自动生成，仅作演示，可能有误；实际组装以随附的纸质说明书为准。本项目与任何家具品牌无关，产品名称归各自的商标所有者。',
+    other: 'EN', cover: '{name} 3D 模型',
+    empty: '还没有案例。运行 scripts/make.py "<商品名>" 生成第一个，或打开手写示例：guide.html?scene=kallax-handmade',
+  },
+};
+const T = (k, vars = {}) => I18N[LANG][k].replace(/\{(\w+)\}/g, (_, v) => vars[v]);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+document.documentElement.lang = LANG === 'zh' ? 'zh-CN' : 'en';
+document.title = T('title');
+document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T(el.dataset.i18n); });
+document.getElementById('flow').innerHTML = I18N[LANG].flow.map(s => `<span>${esc(s)}</span>`).join('<i>→</i>');
+const langBtn = document.getElementById('langBtn');
+langBtn.textContent = T('other');
+langBtn.onclick = () => { const next = LANG === 'zh' ? 'en' : 'zh'; store.set('lang', next); params.set('lang', next); location.search = params.toString(); };
+
+fetch('cases.json').then(r => r.ok ? r.json() : []).catch(() => []).then(cases => {
+  if (!cases.length) { document.getElementById('grid').innerHTML = `<p>${esc(T('empty'))}</p>`; return; }
+  document.getElementById('grid').innerHTML = cases.map(c => {
+    const img = c.thumb || c.cover;
+    const sub = LANG === 'en' ? (c.subEn || c.sub) : c.sub;
+    const notes = LANG === 'zh' && c.warnings && c.warnings.length; // 校验提示是中文的内部信息，只在中文版里展开
+    return `
+    <a class="case" href="guide.html?scene=${encodeURIComponent(c.slug)}&lang=${LANG}">
+      <div class="cover">${img ? `<img class="${c.thumb ? 'thumb' : ''}" src="${img}" alt="${esc(T('cover', { name: c.name }))}" loading="lazy">` : ''}</div>
+      <div class="body">
+        <div class="name">${esc(c.name)}<small>${esc(sub)}</small></div>
+        <div class="stats"><span><b>${c.manualPages}</b>${T('pages')}</span><span><b>${c.steps}</b>${T('steps')}</span><span><b>${c.parts}</b>${T('parts')}</span></div>
+        ${c.errors === 0
+          ? `<span class="badge ok">${T('ok')}${c.rounds > 1 ? ` · ${T('repaired', { n: c.rounds - 1 })}` : ''}</span>`
+          : `<span class="badge bad">${T('bad', { n: c.errors })}</span>`}
+        ${notes ? `<details><summary>${T('notes', { n: c.warnings.length })}</summary><ul>${c.warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul></details>` : ''}
+        <span class="go">${T('open')}</span>
+      </div>
+    </a>`;
+  }).join('');
+});
+</script>
+</body>
+</html>
